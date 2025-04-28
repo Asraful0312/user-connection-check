@@ -1,34 +1,38 @@
-import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
-import Home from "./components/home";
+import React from "react";
+import { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
-import Offline from "./components/offline";
+import Home from "./page/home";
+import Offline from "./page/offline";
 
 const App = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     const handleOnline = () => {
-      toast.success("You are Online");
+      toast.success("Your are online");
+      navigate(-1);
     };
     const handleOffline = () => {
-      toast.error("You are Offline");
+      toast.error("Your are offline");
+      navigate("/offline");
     };
-    window.addEventListener("offline", handleOffline);
+
     window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
-  }, []);
-
+  }, [navigate]);
   return (
-    <main>
+    <div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/offline" element={<Offline />} />
       </Routes>
       <Toaster richColors position="top-center" />
-    </main>
+    </div>
   );
 };
 
